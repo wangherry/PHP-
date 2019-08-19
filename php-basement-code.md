@@ -17,7 +17,44 @@ PHP的内部运行可以分为三个模块
 
 ## PHP的启动流程
 ```
-web发送请求，
+1.CLI运行模式
+PHP_module_startup(模块初始化)   
+php_request_start（请求初始化阶段）
+php_execute_script(脚本执行阶段)
+php_request_shutdown（请求关闭阶段）
+php_module_shutdown(模块关闭阶段)
+
+
+2.web运行模式
+PHP_module_startup(模块初始化)
+
+##常驻内存开始
+fast_accept_request
+php_request_startup
+fpm_request_exexution
+php_execute_script(脚本执行阶段)
+fpm_request-end
+php_request-shutdown
+## 常驻内存结束
+
+php_module_shutdown(模块关闭阶段)
+
+
+php_execute_script:在这个模块中，大概过程有三步
+(1)先读取PHP的代码，进行词法解析(Lexing)成token;
+(2)语法解析，将token解析成抽象语法树
+(3)将表达式编译成Opcode
+
+
+关于Opcache
+opcache 是一层加速机制，因为php是解释性语言中间会生成opcode交由zend引擎执行。
+
+
+minit 模块初始化，rinit请求初始化，
+对应的分别是结束时候触发mshutdown，rshutdown， 
+顺序 minit-rinit-rshutdown-mshutdown  
+
+
 ```
 
 
@@ -25,6 +62,11 @@ web发送请求，
 ```
 
 ```
+
+## PHP垃圾回收机制
+```
+```
+
 ## 引用计数
 ```
 引用计数在内存回收、字符串操作等地方使用非常广泛。
